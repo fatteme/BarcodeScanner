@@ -2,7 +2,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 
-const serverUrl = 'http://localhost:8080'
+const serverUrl = 'http://168.192.1.6:8000'
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -21,19 +21,18 @@ export default function App() {
     sendDataToServer(data);
   };
 
-  const sendDataToServer = ({ type, data })=> {
-    fetch(serverUrl, {
-        method: 'POST',
-        mode: 'cors',
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
+  const sendDataToServer = ({ type, data }) => {
+    fetch(`${serverUrl}/main/enter/${string(data)}`, {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
       .then((response) => response.json())
-      .then(() => {})
-      .catch((error) => { alert(`Something went wrong, Please try again!, ${error}`);});
+      .then(() => { })
+      .catch((error) => { alert(`Something went wrong, Please try again!, ${error}`); });
   };
 
   if (hasPermission === null) {
@@ -44,35 +43,35 @@ export default function App() {
   }
 
   return (
-      <View style={styles.page}>
-        <View style={styles.header}>
-          <Text style={styles.ticket}>
-            Cinema Ticket
-          </Text>
-          <Text style={styles.text}>
-                Place your ticket barcode inside the frame to scan. avoid shakes to get result quickly.
-          </Text>
-        </View>
-        <View style={styles.container}>
-          <BarCodeScanner
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            style={StyleSheet.absoluteFillObject, styles.camera}
-          />
-          {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
-        </View>
-        <View style={styles.footer}>
-              
-        </View>
+    <View style={styles.page}>
+      <View style={styles.header}>
+        <Text style={styles.ticket}>
+          Cinema Ticket
+        </Text>
+        <Text style={styles.text}>
+          Place your ticket barcode inside the frame to scan. avoid shakes to get result quickly.
+        </Text>
       </View>
+      <View style={styles.container}>
+        <BarCodeScanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={StyleSheet.absoluteFillObject, styles.camera}
+        />
+        {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+      </View>
+      <View style={styles.footer}>
+
+      </View>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({  
-  page:{
+const styles = StyleSheet.create({
+  page: {
     marginTop: 30,
     marginBottom: 20,
     margin: 20,
-    flex:1,
+    flex: 1,
     backgroundColor: '#ffffff',
   },
   container: {
@@ -80,30 +79,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  camera:{
-    paddingLeft:10,
-    height:300,
-    marginBottom:10,
+  camera: {
+    paddingLeft: 10,
+    height: 300,
+    marginBottom: 10,
     borderWidth: 5,
     borderColor: '#0c60c190',
     height: 300,
     width: 300,
   },
-  header:{
+  header: {
     alignItems: 'center',
     paddingTop: 80,
     paddingBottom: 20,
   },
-  ticket:{
+  ticket: {
     fontWeight: 'bold',
     fontSize: 23,
-    marginBottom:10,
+    marginBottom: 10,
   },
-  text:{
+  text: {
     fontSize: 16,
     textAlign: 'center',
     paddingLeft: 25,
     paddingRight: 25,
   },
-}); 
+});
 
