@@ -1,6 +1,7 @@
 # BarcodeScanner
-this is a simple barcodeScanner project.
 
-you need to have `node`, `react-native` and `expo` installed.
+This is a simple barcodeScanner project.
 
-run `npm run start` to start the project.
+You need to have `node`, `react-native` and `expo` installed.
+
+Run `npm run start` to start the project.
