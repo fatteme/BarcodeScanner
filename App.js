@@ -2,6 +2,8 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 
+const serverUrl = 'http://localhost:8080'
+
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -13,9 +15,25 @@ export default function App() {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = (data) => {
     setScanned(true);
     alert(`Barcode has been scanned!`);
+    sendDataToServer(data);
+  };
+
+  const sendDataToServer = ({ type, data })=> {
+    fetch(serverUrl, {
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then((response) => response.json())
+      .then(() => {})
+      .catch((error) => { alert(`Something went wrong, Please try again!, ${error}`);});
   };
 
   if (hasPermission === null) {
