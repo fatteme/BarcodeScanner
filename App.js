@@ -2,7 +2,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 
-const serverUrl = 'http://168.192.1.6:8000'
+const serverUrl = 'http://192.168.1.6:8000'
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -22,17 +22,14 @@ export default function App() {
   };
 
   const sendDataToServer = ({ type, data }) => {
-    fetch(`${serverUrl}/main/enter/${string(data)}`, {
+    fetch(`${serverUrl}/main/enter/${data}`, {
       method: 'POST',
-      mode: 'cors',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
     })
-      .then((response) => response.json())
-      .then(() => { })
-      .catch((error) => { alert(`Something went wrong, Please try again!, ${error}`); });
+    .catch((error) => { alert(`Something went wrong with POST request, Please try again!, ${error}`); });
+    fetch(`${serverUrl}/main/enter/${data}`, {
+      method: 'GET',
+    })
+    .catch((error) => { alert(`Something went wrong with GET request, Please try again!, ${error}`); });
   };
 
   if (hasPermission === null) {
